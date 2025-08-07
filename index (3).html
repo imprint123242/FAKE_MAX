@@ -1,0 +1,386 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FAKE MAX - Скачайте приложение</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(-25%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+                transform: translateY(0);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+        
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+        
+        .delay-1000 {
+            animation-delay: 1s;
+        }
+        
+        .bg-clip-text {
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        
+        .text-transparent {
+            color: transparent;
+        }
+        
+        .blur-3xl {
+            filter: blur(64px);
+        }
+        
+        .shadow-inner {
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+        }
+        
+        .loaded {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .not-loaded {
+            transform: translateY(2.5rem);
+            opacity: 0;
+        }
+        
+        .logo-hover {
+            transform: scale(1.1) rotate(3deg);
+        }
+        
+        .logo-normal {
+            transform: scale(1);
+        }
+        
+        .button-hover {
+            transform: scale(1.05) translateY(-0.25rem);
+        }
+        
+        .glow-hover {
+            opacity: 0.6;
+        }
+        
+        .glow-normal {
+            opacity: 0.3;
+        }
+        
+        .overlay-hover {
+            opacity: 1;
+        }
+        
+        .overlay-normal {
+            opacity: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .text-5xl { font-size: 2.25rem; }
+            .text-3xl { font-size: 1.5rem; }
+            .text-xl { font-size: 1rem; }
+            .w-48 { width: 8rem; }
+            .h-48 { height: 8rem; }
+            .w-8 { width: 2rem; }
+            .h-8 { height: 2rem; }
+            .px-12 { padding-left: 2rem; padding-right: 2rem; }
+            .py-4 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+            .text-sm { font-size: 0.75rem; }
+            .max-w-md { max-width: 90%; }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .text-7xl { font-size: 3.75rem; }
+            .text-5xl { font-size: 2.5rem; }
+            .w-48 { width: 12rem; }
+            .h-48 { height: 12rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden">
+        <!-- Navigation -->
+        <nav class="flex flex-col sm:flex-row justify-between items-center p-4 sm:p-6 relative z-10">
+            <div class="flex items-center space-x-2 mb-4 sm:mb-0">
+                <img src="image1.jpg" alt="FAKE MAX Icon" class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg object-cover">
+                <span class="text-lg sm:text-xl font-semibold">FAKE MAX</span>
+                <span class="bg-blue-600 text-xs px-2 py-1 rounded-full">BETA</span>
+            </div>
+
+            <div class="flex sm:hidden justify-center w-full">
+                <a href="https://t.me/fake_max" class="text-sm px-4 py-2 bg-blue-600 rounded-full hover:bg-blue-700 transition-colors duration-300">
+                    Скачать приложение
+                </a>
+            </div>
+            <div class="hidden sm:flex space-x-8 text-gray-300">
+                <a href="https://t.me/fake_max" class="hover:text-white transition-colors duration-300">
+                    Скачать приложение
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex flex-col items-center justify-center min-h-[80vh] px-4 sm:px-6 relative">
+            <!-- Animated Background Elements -->
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="absolute top-1/4 left-1/4 w-32 sm:w-64 h-32 sm:h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+                <div class="absolute bottom-1/4 right-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            </div>
+
+            <!-- Logo -->
+            <div id="logo-container" class="relative mb-8 sm:mb-12 transform transition-all duration-1000 not-loaded">
+                <div id="logo" class="w-32 sm:w-48 h-32 sm:h-48 relative transform transition-transform duration-500 logo-normal">
+                    <!-- Outer glow -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-3xl blur-xl opacity-50 animate-pulse"></div>
+                    <!-- Image -->
+                    <img src="image1.jpg" alt="FAKE MAX Logo" class="relative w-full h-full object-cover rounded-3xl shadow-2xl transform rotate-12">
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div id="title" class="text-center mb-8 sm:mb-12 transform transition-all duration-1000 not-loaded" style="transition-delay: 300ms;">
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
+                    Скачайте FAKE MAX
+                </h1>
+                <h2 class="text-2xl sm:text-3xl md:text-5xl font-light text-gray-300">
+                    на телефон
+                </h2>
+            </div>
+
+            <!-- Download Button -->
+            <div id="download-button" class="transform transition-all duration-1000 not-loaded" style="transition-delay: 500ms;">
+                <a href="https://t.me/fake_max" class="group relative px-8 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-700 rounded-full text-lg sm:text-xl font-semibold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300">
+                    <span class="relative z-10">Скачать приложение</span>
+                    <div id="button-overlay" class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-opacity duration-300 overlay-normal"></div>
+                    <!-- Button glow effect -->
+                    <div id="button-glow" class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-700 rounded-full blur transition-opacity duration-300 glow-normal"></div>
+                </a>
+            </div>
+
+            <!-- Bottom Text -->
+            <div id="bottom-text" class="text-center mt-12 sm:mt-16 text-gray-400 max-w-md transform transition-all duration-1000 not-loaded" style="transition-delay: 700ms;">
+                <p class="mb-2 text-sm sm:text-base">Новые функции сделают приложение еще удобнее.</p>
+                <p class="hover:text-gray-300 transition-colors duration-300 cursor-pointer text-sm sm:text-base">
+                    Следите за обновлениями
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="py-6 text-center">
+            <p class="text-gray-500 text-xs sm:text-sm opacity-50 px-4">
+                Этот сайт никак не относится к мессенджеру "MAX", является отдельным продуктом и все совпадения случайны
+            </p>
+        </footer>
+
+        <!-- Floating particles -->
+        <div id="particles" class="absolute inset-0 pointer-events-none"></div>
+    </div>
+
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+            return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+
+                    // Convert sheet to JSON to filter blank rows
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    // Filter out blank rows
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                    // Heuristic to find header row
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                        headerRowIndex = 0;
+                    }
+
+                    // Convert filtered JSON back to CSV
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
+            }
+            return gk_fileData[filename] || "";
+        }
+
+        // Initialize page load animation
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('logo-container').classList.remove('not-loaded');
+                document.getElementById('logo-container').classList.add('loaded');
+            }, 100);
+            
+            setTimeout(() => {
+                document.getElementById('title').classList.remove('not-loaded');
+                document.getElementById('title').classList.add('loaded');
+            }, 400);
+            
+            setTimeout(() => {
+                document.getElementById('download-button').classList.remove('not-loaded');
+                document.getElementById('download-button').classList.add('loaded');
+            }, 600);
+            
+            setTimeout(() => {
+                document.getElementById('bottom-text').classList.remove('not-loaded');
+                document.getElementById('bottom-text').classList.add('loaded');
+            }, 800);
+        });
+
+        // Logo hover/touch effects
+        const logoContainer = document.getElementById('logo-container');
+        const logo = document.getElementById('logo');
+        
+        logoContainer.addEventListener('mouseenter', function() {
+            logo.classList.remove('logo-normal');
+            logo.classList.add('logo-hover');
+        });
+        
+        logoContainer.addEventListener('mouseleave', function() {
+            logo.classList.remove('logo-hover');
+            logo.classList.add('logo-normal');
+        });
+
+        logoContainer.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            logo.classList.remove('logo-normal');
+            logo.classList.add('logo-hover');
+        });
+
+        logoContainer.addEventListener('touchend', function() {
+            logo.classList.remove('logo-hover');
+            logo.classList.add('logo-normal');
+        });
+
+        // Button hover/touch effects
+        const downloadButton = document.getElementById('download-button');
+        const buttonOverlay = document.getElementById('button-overlay');
+        const buttonGlow = document.getElementById('button-glow');
+        
+        downloadButton.addEventListener('mouseenter', function() {
+            downloadButton.classList.add('button-hover');
+            buttonOverlay.classList.remove('overlay-normal');
+            buttonOverlay.classList.add('overlay-hover');
+            buttonGlow.classList.remove('glow-normal');
+            buttonGlow.classList.add('glow-hover');
+        });
+        
+        downloadButton.addEventListener('mouseleave', function() {
+            downloadButton.classList.remove('button-hover');
+            buttonOverlay.classList.remove('overlay-hover');
+            buttonOverlay.classList.add('overlay-normal');
+            buttonGlow.classList.remove('glow-hover');
+            buttonGlow.classList.add('glow-normal');
+        });
+
+        downloadButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            downloadButton.classList.add('button-hover');
+            buttonOverlay.classList.remove('overlay-normal');
+            buttonOverlay.classList.add('overlay-hover');
+            buttonGlow.classList.remove('glow-normal');
+            buttonGlow.classList.add('glow-hover');
+        });
+
+        downloadButton.addEventListener('touchend', function() {
+            downloadButton.classList.remove('button-hover');
+            buttonOverlay.classList.remove('overlay-hover');
+            buttonOverlay.classList.add('overlay-normal');
+            buttonGlow.classList.remove('glow-hover');
+            buttonGlow.classList.add('glow-normal');
+        });
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 640 ? 10 : 20;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'absolute w-1 sm:w-2 h-1 sm:h-2 bg-blue-400/30 rounded-full animate-bounce';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (3 + Math.random() * 2) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        createParticles();
+
+        // Recreate particles on window resize
+        window.addEventListener('resize', function() {
+            const particlesContainer = document.getElementById('particles');
+            particlesContainer.innerHTML = '';
+            createParticles();
+        });
+    </script>
+</body>
+</html>
