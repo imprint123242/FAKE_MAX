@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -46,13 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.4; }
         }
         
         @keyframes bounce {
             0%, 100% {
-                transform: translateY(-25%);
+                transform: translateY(-15%);
                 animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
             }
             50% {
@@ -63,12 +24,12 @@
 
         @keyframes snowfall {
             0% {
-                transform: translateY(-10vh) translateX(0);
-                opacity: 0.7;
+                transform: translateY(-10vh);
+                opacity: 0.6;
             }
             100% {
-                transform: translateY(100vh) translateX(20px);
-                opacity: 0.3;
+                transform: translateY(100vh);
+                opacity: 0.2;
             }
         }
 
@@ -78,7 +39,7 @@
                 opacity: 1;
             }
             100% {
-                transform: translate(300px, 300px);
+                transform: translate(200px, 200px);
                 opacity: 0;
             }
         }
@@ -90,11 +51,11 @@
         }
         
         .animate-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
         
         .animate-bounce {
-            animation: bounce 1s infinite;
+            animation: bounce 1.5s infinite;
         }
 
         .animate-snowfall {
@@ -118,8 +79,8 @@
             color: transparent;
         }
         
-        .blur-3xl {
-            filter: blur(64px);
+        .blur-xl {
+            filter: blur(24px);
         }
         
         .shadow-inner {
@@ -132,12 +93,12 @@
         }
         
         .not-loaded {
-            transform: translateY(2.5rem);
+            transform: translateY(2rem);
             opacity: 0;
         }
         
         .logo-hover {
-            transform: scale(1.1) rotate(3deg);
+            transform: scale(1.05) rotate(2deg);
         }
         
         .logo-normal {
@@ -145,19 +106,19 @@
         }
         
         .button-hover {
-            transform: scale(1.05) translateY(-0.25rem);
+            transform: scale(1.03) translateY(-0.15rem);
         }
         
         .glow-hover {
-            opacity: 0.6;
+            opacity: 0.5;
         }
         
         .glow-normal {
-            opacity: 0.3;
+            opacity: 0.2;
         }
         
         .overlay-hover {
-            opacity: 1;
+            opacity: 0.8;
         }
         
         .overlay-normal {
@@ -165,9 +126,9 @@
         }
 
         .animated-bg {
-            background: linear-gradient(45deg, #1a1a40, #2a1a60, #3a1a80, #2a1a60);
-            background-size: 400% 400%;
-            animation: gradientFlow 15s ease infinite;
+            background: linear-gradient(45deg, #1a1a40, #2a1a60, #3a1a80);
+            background-size: 300% 300%;
+            animation: gradientFlow 20s ease infinite;
         }
 
         .snowflake {
@@ -181,17 +142,17 @@
             background: white;
             border-radius: 50%;
             position: absolute;
-            box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.6);
         }
 
         .shooting-star::after {
             content: '';
             position: absolute;
-            width: 60px;
+            width: 50px;
             height: 2px;
-            background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.6));
+            background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5));
             transform: rotate(-45deg);
-            left: -48px;
+            left: -40px;
             top: 2px;
         }
     </style>
@@ -200,71 +161,69 @@
     <div class="min-h-screen animated-bg text-white overflow-hidden relative">
         <!-- Animated Background Elements -->
         <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-            <div class="absolute top-3/4 left-3/4 w-80 h-80 bg-pink-500/15 rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute bottom-1/2 left-1/3 w-72 h-72 bg-cyan-500/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            <div class="absolute top-1/4 left-1/4 w-48 h-48 bg-blue-500/15 rounded-full blur-xl animate-pulse"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/15 rounded-full blur-xl animate-pulse delay-1000"></div>
         </div>
 
         <!-- Navigation -->
-        <nav class="flex justify-between items-center p-6 relative z-10">
+        <nav class="flex justify-between items-center p-4 relative z-10">
             <div class="flex items-center space-x-2">
                 <img src="image1.jpg" alt="FAKE MAX Icon" class="w-8 h-8 rounded-lg object-cover">
-                <span class="text-xl font-semibold">FAKE MAX</span>
+                <span class="text-lg font-semibold">FAKE MAX</span>
                 <span class="bg-blue-600 text-xs px-2 py-1 rounded-full">BETA</span>
             </div>
 
-            <div class="hidden md:flex space-x-8 text-gray-300">
-                <a href="https://t.me/fake_max" class="hover:text-white transition-colors duration-300">
+            <div class="hidden md:flex space-x-6 text-gray-300">
+                <a href="https://t.me/fake_max" class="hover:text-white transition-colors duration-200">
                     Скачать приложение
                 </a>
             </div>
         </nav>
 
         <!-- Main Content -->
-        <div class="flex flex-col items-center justify-center min-h-[80vh] px-6 relative">
+        <div class="flex flex-col items-center justify-center min-h-[80vh] px-4 relative">
             <!-- Logo -->
-            <div id="logo-container" class="relative mb-12 transform transition-all duration-1000 not-loaded">
-                <div id="logo" class="w-48 h-48 relative transform transition-transform duration-500 logo-normal">
+            <div id="logo-container" class="relative mb-8 transform transition-all duration-800 not-loaded">
+                <div id="logo" class="w-40 h-40 relative transform transition-transform duration-400 logo-normal">
                     <!-- Outer glow -->
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-3xl blur-xl opacity-50 animate-pulse"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-400/50 to-purple-500/50 rounded-3xl blur-xl opacity-40 animate-pulse"></div>
                     <!-- Image -->
-                    <img src="image1.jpg" alt="FAKE MAX Logo" class="relative w-full h-full object-cover rounded-3xl shadow-2xl transform rotate-12">
+                    <img src="image1.jpg" alt="FAKE MAX Logo" class="relative w-full h-full object-cover rounded-3xl shadow-xl transform rotate-12">
                 </div>
             </div>
 
             <!-- Title -->
-            <div id="title" class="text-center mb-12 transform transition-all duration-1000 not-loaded" style="transition-delay: 300ms;">
-                <h1 class="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
+            <div id="title" class="text-center mb-8 transform transition-all duration-800 not-loaded" style="transition-delay: 200ms;">
+                <h1 class="text-4xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
                     Скачайте FAKE MAX
                 </h1>
-                <h2 class="text-3xl md:text-5xl font-light text-gray-300">
+                <h2 class="text-2xl md:text-4xl font-light text-gray-300">
                     на телефон
                 </h2>
             </div>
 
             <!-- Download Button -->
-            <div id="download-button" class="transform transition-all duration-1000 not-loaded" style="transition-delay: 500ms;">
-                <a href="https://t.me/fake_max" class="group relative px-12 py-4 bg-gradient-to-r from-blue-600 to-purple-700 rounded-full text-xl font-semibold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300">
-                    <span class="relative z-10 organic-oxygen">Скачать приложение</span>
-                    <div id="button-overlay" class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-opacity duration-300 overlay-normal"></div>
+            <div id="download-button" class="transform transition-all duration-800 not-loaded" style="transition-delay: 400ms;">
+                <a href="https://t.me/fake_max" class="group relative px-10 py-3 bg-gradient-to-r from-blue-600 to-purple-700 rounded-full text-lg font-semibold shadow-xl hover:shadow-blue-500/20 transition-all duration-200">
+                    <span class="relative z-10">Скачать приложение</span>
+                    <div id="button-overlay" class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-opacity duration-200 overlay-normal"></div>
                     <!-- Button glow effect -->
-                    <div id="button-glow" class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-700 rounded-full blur transition-opacity duration-300 glow-normal"></div>
+                    <div id="button-glow" class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-700 rounded-full blur transition-opacity duration-200 glow-normal"></div>
                 </a>
             </div>
 
             <!-- Bottom Text -->
-            <div id="bottom-text" class="text-center mt-16 text-gray-400 max-w-md transform transition-all duration-1000 not-loaded" style="transition-delay: 700ms;">
-                <p class="mb-2">Новые функции сделают приложение еще удобнее.</p>
-                <p class="hover:text-gray-300 transition-colors duration-300 cursor-pointer">
+            <div id="bottom-text" class="text-center mt-12 text-gray-400 max-w-sm transform transition-all duration-800 not-loaded" style="transition-delay: 600ms;">
+                <p class="mb-2 text-sm">Новые функции сделают приложение еще удобнее.</p>
+                <p class="hover:text-gray-300 transition-colors duration-200 cursor-pointer text-sm">
                     Следите за обновлениями
                 </p>
             </div>
         </div>
 
         <!-- Footer -->
-        <footer class="py-6 text-center">
-            <p class="text-gray-500 text-sm opacity-50">
+        <footer class="py-4 text-center">
+            <p class="text-gray-500 text-xs opacity-50">
                 Этот сайт никак не относится к мессенджеру "MAX", является отдельным продуктом и все совпадения случайны
             </p>
         </footer>
@@ -284,17 +243,17 @@
             setTimeout(() => {
                 document.getElementById('title').classList.remove('not-loaded');
                 document.getElementById('title').classList.add('loaded');
-            }, 400);
+            }, 300);
             
             setTimeout(() => {
                 document.getElementById('download-button').classList.remove('not-loaded');
                 document.getElementById('download-button').classList.add('loaded');
-            }, 600);
+            }, 500);
             
             setTimeout(() => {
                 document.getElementById('bottom-text').classList.remove('not-loaded');
                 document.getElementById('bottom-text').classList.add('loaded');
-            }, 800);
+            }, 700);
         });
 
         // Logo hover effects
@@ -336,19 +295,18 @@
         function createSnowflakesAndStars() {
             const snowflakesContainer = document.getElementById('snowflakes');
             
-            // Create snowflakes
-            for (let i = 0; i < 50; i++) {
+            // Create fewer snowflakes
+            for (let i = 0; i < 20; i++) {
                 const snowflake = document.createElement('div');
-                const size = Math.random() * 12 + 6;
+                const size = Math.random() * 10 + 5;
                 snowflake.className = 'absolute snowflake animate-snowfall';
                 snowflake.style.width = `${size}px`;
                 snowflake.style.height = `${size}px`;
                 snowflake.style.left = Math.random() * 100 + '%';
                 snowflake.style.top = `-${size}px`;
-                snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                snowflake.style.animationDuration = (Math.random() * 6 + 6) + 's';
                 snowflake.style.animationDelay = Math.random() * 5 + 's';
-                snowflake.style.opacity = Math.random() * 0.5 + 0.3;
-                snowflake.style.transform = `rotate(${Math.random() * 360}deg)`;
+                snowflake.style.opacity = Math.random() * 0.4 + 0.2;
                 snowflakesContainer.appendChild(snowflake);
             }
 
@@ -358,7 +316,7 @@
                 star.className = 'absolute shooting-star animate-shooting-star';
                 star.style.left = Math.random() * 50 + '%';
                 star.style.top = Math.random() * 30 + '%';
-                star.style.animationDuration = (Math.random() * 1 + 2) + 's'; // Changed to 2-3s
+                star.style.animationDuration = (Math.random() * 1 + 2) + 's';
                 snowflakesContainer.appendChild(star);
 
                 // Remove star after animation completes
@@ -367,17 +325,19 @@
                 }, parseFloat(star.style.animationDuration) * 1000);
             }
 
-            // Spawn shooting stars at random intervals
+            // Spawn shooting stars less frequently
             function spawnShootingStar() {
                 createShootingStar();
-                setTimeout(spawnShootingStar, Math.random() * 5000 + 3000); // Spawn every 3-8 seconds
+                setTimeout(spawnShootingStar, Math.random() * 8000 + 5000); // Spawn every 5-13 seconds
             }
 
             spawnShootingStar();
         }
 
-        // Initialize snowflakes and shooting stars
-        createSnowflakesAndStars();
+        // Initialize snowflakes and shooting stars only if device is capable
+        if (!/Mobi|Android/i.test(navigator.userAgent) || window.innerWidth > 768) {
+            createSnowflakesAndStars();
+        }
     </script>
 </body>
 </html>
