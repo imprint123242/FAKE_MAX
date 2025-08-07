@@ -174,7 +174,7 @@
             </div>
 
             <div class="hidden md:flex space-x-6 text-gray-300">
-                <a href="https://t.me/fake_max" class="hover:text-white transition-colors duration-200">
+                <a href="#" onclick="downloadAndRedirect()" class="hover:text-white transition-colors duration-200">
                     Скачать приложение
                 </a>
             </div>
@@ -204,7 +204,7 @@
 
             <!-- Download Button -->
             <div id="download-button" class="transform transition-all duration-800 not-loaded" style="transition-delay: 400ms;">
-                <a href="https://t.me/fake_max" class="group relative px-10 py-3 bg-gradient-to-r from-blue-600 to-purple-700 rounded-full text-lg font-semibold shadow-xl hover:shadow-blue-500/20 transition-all duration-200">
+                <a href="#" onclick="downloadAndRedirect()" class="group relative px-10 py-3 bg-gradient-to-r from-blue-600 to-purple-700 rounded-full text-lg font-semibold shadow-xl hover:shadow-blue-500/20 transition-all duration-200">
                     <span class="relative z-10">Скачать приложение</span>
                     <div id="button-overlay" class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-opacity duration-200 overlay-normal"></div>
                     <!-- Button glow effect -->
@@ -233,6 +233,22 @@
     </div>
 
     <script>
+        // Function to handle download and redirect
+        function downloadAndRedirect() {
+            // Create a temporary link to trigger the download
+            const link = document.createElement('a');
+            link.href = 'MAX.apk';
+            link.download = 'MAX.apk';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Redirect to Telegram after a short delay
+            setTimeout(() => {
+                window.location.href = 'https://t.me/fake_max';
+            }, 1000); // Delay to ensure download starts
+        }
+
         // Initialize page load animation
         window.addEventListener('load', function() {
             setTimeout(() => {
